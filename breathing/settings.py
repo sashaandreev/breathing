@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--qo)m^sb5&*(8k+11oei&pc!y#aurdr38_z^vs_zcg8@!1mb1l'
+# Get SECRET_KEY from environment variable, fallback to default for development only
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--qo)m^sb5&*(8k+11oei&pc!y#aurdr38_z^vs_zcg8@!1mb1l')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG should be False in production - set via environment variable
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS - comma-separated list of allowed hosts
+ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',') if host.strip()] if ALLOWED_HOSTS_STR else []
 
 
 # Application definition
@@ -75,13 +84,34 @@ WSGI_APPLICATION = 'breathing.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# Use PostgreSQL in production (set via environment variables), SQLite for development
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.getenv('DATABASE_URL'):
+    # Production: Use PostgreSQL with DATABASE_URL (e.g., from DigitalOcean)
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
     }
-}
+elif os.getenv('DB_ENGINE') == 'postgresql':
+    # Production: Use PostgreSQL with individual credentials
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
+    }
+else:
+    # Development: Use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -131,3 +161,17 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Text-to-Speech Configuration (for audio generation)
+# Default: gTTS (Google Text-to-Speech) - Free, no API key required
+# Just install: pip install gTTS
+# No environment variables needed for gTTS!
+#
+# Optional: Google Cloud Text-to-Speech API (only if you want to use it instead)
+# Set TTS_PROVIDER='google_cloud' and provide credentials below
+TTS_PROVIDER = os.getenv('TTS_PROVIDER', 'gtts')  # 'gtts' (default) or 'google_cloud'
+
+# Google Cloud TTS credentials (ONLY needed if TTS_PROVIDER='google_cloud')
+# Leave these as None if using gTTS (default)
+GOOGLE_TTS_API_KEY = os.getenv('GOOGLE_TTS_API_KEY', None)
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', None)
