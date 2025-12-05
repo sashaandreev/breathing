@@ -1,0 +1,368 @@
+[
+  {
+    "model": "breathe.breathingcategory",
+    "pk": 1,
+    "fields": {
+      "name_ru": "Пробуждение (Wakeup)"
+    }
+  },
+  {
+    "model": "breathe.breathingcategory",
+    "pk": 2,
+    "fields": {
+      "name_ru": "Фокус (Focus)"
+    }
+  },
+  {
+    "model": "breathe.breathingcategory",
+    "pk": 3,
+    "fields": {
+      "name_ru": "Перезагрузка (Reset Mind)"
+    }
+  },
+  {
+    "model": "breathe.breathingcategory",
+    "pk": 4,
+    "fields": {
+      "name_ru": "Вместо сигареты (Craving Control)"
+    }
+  },
+  {
+    "model": "breathe.breathingcategory",
+    "pk": 5,
+    "fields": {
+      "name_ru": "Спокойствие (Calm)"
+    }
+  },
+  {
+    "model": "breathe.breathingcategory",
+    "pk": 6,
+    "fields": {
+      "name_ru": "Снятие стресса (Stress Relief)"
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name_ru": "Дыхание кузнечных мехов (Бхастрика)",
+      "inhale": 1,
+      "hold_start": 0,
+      "exhale": 1,
+      "hold_end": 0,
+      "recommended_time_min": 1,
+      "posture_ru": "Сидя, спина прямо",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Делайте резкие, сильные выдохи, используя мышцы живота. Вдох происходит автоматически. Не для беременных и людей с высоким давлением.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 2,
+    "fields": {
+      "category": 1,
+      "name_ru": "Трехчастное дыхание (Дирга)",
+      "inhale": 4,
+      "hold_start": 0,
+      "exhale": 4,
+      "hold_end": 0,
+      "recommended_time_min": 3,
+      "posture_ru": "Лежа на спине, руки на животе",
+      "breath_origin": "ABDOMEN",
+      "instructions_ru": "Вдыхайте, наполняя сначала живот, затем ребра, затем грудь. Выдыхайте в обратном порядке: грудь, ребра, живот. Используйте максимальную емкость легких.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 3,
+    "fields": {
+      "category": 1,
+      "name_ru": "Интенсивный ритм 2:2",
+      "inhale": 2,
+      "hold_start": 0,
+      "exhale": 2,
+      "hold_end": 0,
+      "recommended_time_min": 2,
+      "posture_ru": "Стоя или сидя, глаза открыты",
+      "breath_origin": "CHEST",
+      "instructions_ru": "Быстрый, но контролируемый ритм. Вдыхайте в грудь, выдыхайте из груди. Помогает увеличить частоту сердечных сокращений и сосредоточиться.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 4,
+    "fields": {
+      "category": 2,
+      "name_ru": "Квадратное дыхание (4:4:4:4)",
+      "inhale": 4,
+      "hold_start": 4,
+      "exhale": 4,
+      "hold_end": 4,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, спина прямая, глаза закрыты",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Сбалансированный ритм для максимальной концентрации. Вдох и выдох через нос, задержки равны фазам дыхания.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 5,
+    "fields": {
+      "category": 2,
+      "name_ru": "Поток 5:1:5:1",
+      "inhale": 5,
+      "hold_start": 1,
+      "exhale": 5,
+      "hold_end": 1,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, глаза открыты (мягкий фокус)",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Слегка удлиненный ритм с очень короткими паузами. Цель – приковать внимание к медленному и глубокому движению диафрагмы.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 6,
+    "fields": {
+      "category": 2,
+      "name_ru": "Медленное попеременное дыхание",
+      "inhale": 5,
+      "hold_start": 0,
+      "exhale": 5,
+      "hold_end": 0,
+      "recommended_time_min": 5,
+      "posture_ru": "Сидя, используйте правую руку (закройте ноздри)",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Закройте большой палец правой ноздрей, вдохните через левую. В конце вдоха закройте левую ноздрю безымянным пальцем и выдохните через правую. Чередуйте ноздри.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 7,
+    "fields": {
+      "category": 3,
+      "name_ru": "Физиологический вздох",
+      "inhale": 2,
+      "hold_start": 0,
+      "exhale": 6,
+      "hold_end": 0,
+      "recommended_time_min": 2,
+      "posture_ru": "Сидя или стоя, плечи расслаблены",
+      "breath_origin": "MOUTH",
+      "instructions_ru": "Сделайте глубокий вдох, а затем, не выдыхая, сделайте еще один короткий, резкий вдох (как бы «добирая» воздух). Затем длинный, медленный выдох через рот.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 8,
+    "fields": {
+      "category": 3,
+      "name_ru": "Мягкий вздох освобождения",
+      "inhale": 3,
+      "hold_start": 0,
+      "exhale": 6,
+      "hold_end": 0,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, глаза закрыты",
+      "breath_origin": "MOUTH",
+      "instructions_ru": "Сосредоточьтесь на том, чтобы сделать выдох в два раза дольше вдоха. Выдох через приоткрытый рот со звуком «ха» для снятия ментального напряжения.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 9,
+    "fields": {
+      "category": 3,
+      "name_ru": "Нейтральный ритм 4:0:4:0",
+      "inhale": 4,
+      "hold_start": 0,
+      "exhale": 4,
+      "hold_end": 0,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, глаза открыты",
+      "breath_origin": "ALL",
+      "instructions_ru": "Простой, сбалансированный ритм 1:1. Не фокусируйтесь на животе или груди, дышите естественно. Используйте, чтобы сбросить мысли и начать новое задание.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 10,
+    "fields": {
+      "category": 4,
+      "name_ru": "Дыхание 4-7-8",
+      "inhale": 4,
+      "hold_start": 7,
+      "exhale": 8,
+      "hold_end": 0,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, кончик языка за передними зубами",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Медленный вдох через нос (4с), задержка (7с), шумный полный выдох через рот (8с). Этот длинный цикл отвлекает от тяги и успокаивает нервную систему.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 11,
+    "fields": {
+      "category": 4,
+      "name_ru": "Быстрое квадратное дыхание 3:3:3:3",
+      "inhale": 3,
+      "hold_start": 3,
+      "exhale": 3,
+      "hold_end": 3,
+      "recommended_time_min": 2,
+      "posture_ru": "Стоя или сидя, глаза открыты",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Быстрый ритм для мгновенного отвлечения внимания. Используйте этот цикл 3:3:3:3, чтобы быстро прервать цикл навязчивой тяги.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 12,
+    "fields": {
+      "category": 4,
+      "name_ru": "Глубокое диафрагмальное дыхание",
+      "inhale": 5,
+      "hold_start": 0,
+      "exhale": 5,
+      "hold_end": 0,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, рука на животе",
+      "breath_origin": "ABDOMEN",
+      "instructions_ru": "Сосредоточьтесь на том, чтобы при вдохе рука на животе поднималась, а рука на груди оставалась неподвижной. Глубокое дыхание отвлекает от паники и тяги.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 13,
+    "fields": {
+      "category": 5,
+      "name_ru": "Брама Мудра (4:0:6:0)",
+      "inhale": 4,
+      "hold_start": 0,
+      "exhale": 6,
+      "hold_end": 0,
+      "recommended_time_min": 5,
+      "posture_ru": "Лежа на спине, руки вдоль тела",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Мягкий вдох носом, выдох носом, который на 50% длиннее вдоха. Удлиненный выдох сигнализирует телу о безопасности и способствует снижению сердечного ритма.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 14,
+    "fields": {
+      "category": 5,
+      "name_ru": "Счет выдохов (обратный отсчет)",
+      "inhale": 3,
+      "hold_start": 0,
+      "exhale": 5,
+      "hold_end": 0,
+      "recommended_time_min": 5,
+      "posture_ru": "Лежа, глаза закрыты",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "В то время как приложение отсчитывает фазы, вы мысленно считаете выдохи, начиная с 10 и до 1. Если сбились, начинайте заново с 10.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 15,
+    "fields": {
+      "category": 5,
+      "name_ru": "Дыхание 6:0:8:0 для сна",
+      "inhale": 6,
+      "hold_start": 0,
+      "exhale": 8,
+      "hold_end": 0,
+      "recommended_time_min": 8,
+      "posture_ru": "Лежа, тело максимально расслаблено",
+      "breath_origin": "ABDOMEN",
+      "instructions_ru": "Используйте этот очень медленный ритм для успокоения. Ощутите, как живот мягко поднимается и опускается, позволяя телу полностью расслабиться.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 16,
+    "fields": {
+      "category": 6,
+      "name_ru": "Дыхание 4:0:8:0 (Вагус)",
+      "inhale": 4,
+      "hold_start": 0,
+      "exhale": 8,
+      "hold_end": 0,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, спина прямая, ноги на полу",
+      "breath_origin": "ABDOMEN",
+      "instructions_ru": "Фокус на максимально длинном выдохе (в 2 раза дольше вдоха). Это стимулирует блуждающий нерв, мгновенно снижая реакцию на стресс и заземляя.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 17,
+    "fields": {
+      "category": 6,
+      "name_ru": "Ритм 6:3:9:0 (Успокаивающий)",
+      "inhale": 6,
+      "hold_start": 3,
+      "exhale": 9,
+      "hold_end": 0,
+      "recommended_time_min": 5,
+      "posture_ru": "Сидя, руки на коленях",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Медленный, очень глубокий вдох, небольшая задержка, и самый длинный, контролируемый выдох. Этот ритм помогает стабилизировать нервную систему при остром стрессе.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  },
+  {
+    "model": "breathe.breathingtechnique",
+    "pk": 18,
+    "fields": {
+      "category": 6,
+      "name_ru": "Дыхание по пальцам",
+      "inhale": 4,
+      "hold_start": 0,
+      "exhale": 4,
+      "hold_end": 0,
+      "recommended_time_min": 3,
+      "posture_ru": "Сидя, руки перед собой",
+      "breath_origin": "NOSTRILS",
+      "instructions_ru": "Синхронизируйте дыхание с визуальным отслеживанием пальцев: медленно ведите пальцем вверх по мизинцу на вдохе, и вниз на выдохе. Переходите к следующему пальцу.",
+      "use_sound_cue": true,
+      "use_haptic_cue": true
+    }
+  }
+]

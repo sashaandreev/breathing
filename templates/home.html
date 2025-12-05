@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная - Breathe & Resist{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <!-- Activity Tracker (Superuser Only) -->
+    <div class="activity-tracker">
+        <h2 class="tracker-title">Счетчики</h2>
+        
+        <div class="activity-badges">
+            <!-- RESIST Badge -->
+            <div class="activity-badge badge-resist" data-activity-type="RESIST">
+                <div class="badge-icon">✅</div>
+                <div class="badge-label">Бросил</div>
+                <div class="badge-count" id="count-resist">{{ activity_counts.resist }}</div>
+            </div>
+            
+            <!-- SMOKED Badge -->
+            <div class="activity-badge badge-smoked" data-activity-type="SMOKED">
+                <div class="badge-icon">🚫</div>
+                <div class="badge-label">Сорвался</div>
+                <div class="badge-count" id="count-smoked">{{ activity_counts.smoked }}</div>
+            </div>
+            
+            <!-- SPORT Badge -->
+            <div class="activity-badge badge-sport" data-activity-type="SPORT">
+                <div class="badge-icon">🏃‍♂️</div>
+                <div class="badge-label">Активность</div>
+                <div class="badge-count" id="count-sport">{{ activity_counts.sport }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breathing Menu Access -->
+    <div class="breathing-menu-access">
+        <a href="{% url 'breathe:categories' %}" class="btn-start-breathing">
+            Начать Дыхание
+        </a>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="{% static 'js/activity-tracker.js' %}"></script>
+{% endblock %}
+{% endblock %}
+

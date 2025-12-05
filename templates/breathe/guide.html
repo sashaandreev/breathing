@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ technique.name_ru }} - Breathe & Resist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/guide.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="guide-container">
+    <!-- Progress Bar (Top) -->
+    <div class="progress-section">
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-time" id="progressTime">0:00</div>
+    </div>
+
+    <!-- Dynamic Text Cue (Upper Center) -->
+    <div class="text-cue-section">
+        <div class="text-cue" id="textCue">
+            {% if technique.breath_origin == 'ABDOMEN' %}
+                🧘 Брюшное дыхание
+            {% elif technique.breath_origin == 'CHEST' %}
+                🫁 Грудное дыхание
+            {% elif technique.breath_origin == 'NOSTRILS' %}
+                👃 Дыхание носом
+            {% elif technique.breath_origin == 'MOUTH' %}
+                👄 Дыхание ртом
+            {% else %}
+                🌬️ Естественное дыхание
+            {% endif %}
+        </div>
+        <div class="phase-indicator" id="phaseIndicator">Готов</div>
+        <div class="countdown-number" id="countdownNumber"></div>
+    </div>
+
+        <!-- Balloon Container (Center) -->
+        <div class="visual-section">
+            <!-- Breathing Balloon -->
+            <div class="balloon-container">
+                <div class="breathing-balloon" id="breathingBalloon"></div>
+            </div>
+        </div>
+
+    <!-- Status Icons (Bottom) -->
+    <div class="status-section">
+        <div class="status-icon" id="soundStatus">
+            <span class="status-icon-emoji">🔊</span>
+            <span class="status-icon-label">Звук</span>
+        </div>
+        <div class="status-icon" id="vibrationStatus">
+            <span class="status-icon-emoji">📳</span>
+            <span class="status-icon-label">Вибрация</span>
+        </div>
+    </div>
+
+    <!-- Control Buttons -->
+    <div class="controls-section">
+        <button class="control-button pause-button" id="pauseButton">
+            <span class="button-icon">⏸️</span>
+            <span class="button-label">Пауза</span>
+        </button>
+        <button class="control-button cancel-button" id="cancelButton">
+            <span class="button-icon">✕</span>
+            <span class="button-label">Отмена</span>
+        </button>
+    </div>
+</div>
+
+<!-- Technique Data (Hidden, for JavaScript) -->
+<script>
+    // Pass technique data to JavaScript
+    window.techniqueData = {
+        id: {{ technique.id }},
+        inhale: {{ technique.inhale }},
+        hold_start: {{ technique.hold_start }},
+        exhale: {{ technique.exhale }},
+        hold_end: {{ technique.hold_end }},
+        recommended_time_min: {{ technique.recommended_time_min }},
+        breath_origin: '{{ technique.breath_origin }}',
+        cycle_duration: {{ technique.inhale }} + {{ technique.hold_start }} + {{ technique.exhale }} + {{ technique.hold_end }},
+    };
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/breathing-guide.js' %}"></script>
+{% endblock %}
+

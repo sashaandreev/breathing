@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ technique.name_ru }} - Breathe & Resist{% endblock %}
+
+{% block content %}
+<div class="preparation-container">
+    <h1 class="page-title">{{ technique.name_ru }}</h1>
+    
+    <div class="summary-confirmation">
+        <p><strong>Название:</strong> {{ technique.name_ru }}</p>
+        <p><strong>Общая длительность:</strong> {{ technique.recommended_time_min }} минуты</p>
+        <p><strong>Цикл:</strong> Вдох {{ technique.inhale }} с / Задержка {{ technique.hold_start }} с / Выдох {{ technique.exhale }} с</p>
+        <p><strong>Положение:</strong> {{ technique.posture_ru }}</p>
+        <p><strong>Фокус:</strong> {{ technique_breath_origin_ru }}</p>
+    </div>
+
+    <h2>Инструкции:</h2>
+    <div class="instructions-text">
+        {{ technique.instructions_ru|linebreaks }}
+    </div>
+
+    <div class="toggle-controls">
+        <label class="toggle-label">
+            <input type="checkbox" id="soundToggle" {% if technique.use_sound_cue %}checked{% endif %}>
+            <span>Звуковые подсказки</span>
+        </label>
+        <label class="toggle-label">
+            <input type="checkbox" id="vibrationToggle" {% if technique.use_haptic_cue %}checked{% endif %}>
+            <span>Вибрация</span>
+        </label>
+    </div>
+
+    <button id="startButton" class="start-button">Начать</button>
+    
+    <div class="back-link">
+        <a href="{% url 'breathe:techniques' technique.category.id %}">← Назад</a>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const soundToggle = document.getElementById('soundToggle');
+    const vibrationToggle = document.getElementById('vibrationToggle');
+    const startButton = document.getElementById('startButton');
+
+    // Load preferences from Local Storage or use technique defaults
+    if (localStorage.getItem('soundCueEnabled') !== null) {
+        soundToggle.checked = JSON.parse(localStorage.getItem('soundCueEnabled'));
+    } else {
+        // Use technique default if no preference stored
+        localStorage.setItem('soundCueEnabled', JSON.stringify(soundToggle.checked));
+    }
+
+    if (localStorage.getItem('vibrationCueEnabled') !== null) {
+        vibrationToggle.checked = JSON.parse(localStorage.getItem('vibrationCueEnabled'));
+    } else {
+        // Use technique default if no preference stored
+        localStorage.setItem('vibrationCueEnabled', JSON.stringify(vibrationToggle.checked));
+    }
+
+    // Save preferences to Local Storage on change
+    soundToggle.addEventListener('change', function() {
+        localStorage.setItem('soundCueEnabled', JSON.stringify(this.checked));
+    });
+
+    vibrationToggle.addEventListener('change', function() {
+        localStorage.setItem('vibrationCueEnabled', JSON.stringify(this.checked));
+    });
+
+    startButton.addEventListener('click', function() {
+        // Save preferences before redirecting
+        localStorage.setItem('soundCueEnabled', JSON.stringify(soundToggle.checked));
+        localStorage.setItem('vibrationCueEnabled', JSON.stringify(vibrationToggle.checked));
+        
+        // Redirect to guide screen
+        window.location.href = "{% url 'breathe:guide' technique.id %}";
+    });
+});
+</script>
+{% endblock %}
+

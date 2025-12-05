@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name_ru }} - Breathe & Resist{% endblock %}
+
+{% block content %}
+<div class="techniques-container">
+    <h1 class="page-title">{{ category.name_ru }}</h1>
+    
+    <div class="techniques-list">
+        {% for technique in techniques %}
+        <a href="{% url 'breathe:technique' technique.id %}" class="technique-card">
+            <div class="technique-name">{{ technique.name_ru }}</div>
+            <div class="technique-timing">
+                {{ technique.inhale }}-{{ technique.hold_start }}-{{ technique.exhale }}-{{ technique.hold_end }}
+            </div>
+            <div class="technique-duration">{{ technique.recommended_time_min }} мин</div>
+        </a>
+        {% endfor %}
+    </div>
+    
+    <div class="back-link">
+        <a href="{% url 'breathe:categories' %}">← Назад к категориям</a>
+    </div>
+</div>
+{% endblock %}
+

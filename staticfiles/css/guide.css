@@ -1,0 +1,215 @@
+/* Guide Screen Styles */
+
+.guide-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 60px); /* Account for banner */
+    padding: 1rem;
+    max-width: 420px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+}
+
+/* Progress Bar Section */
+.progress-section {
+    margin-bottom: 1.5rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 100%; /* Start at 100% (full) */
+    background-color: #00A38D;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+.progress-time {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Text Cue Section */
+.text-cue-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.text-cue {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.phase-indicator {
+    font-size: 1.2rem;
+    color: #00A38D;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.countdown-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #00A38D;
+    min-height: 3.5rem;
+    line-height: 3.5rem;
+}
+
+/* Visual Section (Balloon + Torso) */
+.visual-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    min-height: 300px;
+}
+
+/* Balloon Container */
+.balloon-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    min-height: 200px;
+}
+
+.breathing-balloon {
+    width: 40px; /* Start small - JavaScript will animate */
+    height: 40px;
+    max-width: 350px;
+    min-width: 40px;
+    max-height: 350px;
+    min-height: 40px;
+    border-radius: 50%;
+    background-color: #00A38D;
+    /* Remove CSS transition - JavaScript handles animation smoothly */
+    box-shadow: 0 4px 12px rgba(0, 163, 141, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: none; /* Ensure no CSS transitions interfere */
+}
+
+/* Status Section */
+.status-section {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.status-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.status-icon.active {
+    opacity: 1;
+}
+
+.status-icon-emoji {
+    font-size: 2rem;
+}
+
+.status-icon-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Controls Section */
+.controls-section {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.control-button {
+    flex: 1;
+    max-width: 150px;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    transition: transform 0.2s, opacity 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.control-button:active {
+    transform: scale(0.95);
+}
+
+.pause-button {
+    background-color: #007BFF;
+    color: white;
+}
+
+.pause-button:hover {
+    background-color: #0056b3;
+}
+
+.cancel-button {
+    background-color: #DC3545;
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+.button-icon {
+    font-size: 1.5rem;
+}
+
+.button-label {
+    font-size: 0.9rem;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 420px) {
+    .guide-container {
+        padding: 0.8rem;
+    }
+    
+    .text-cue {
+        font-size: 1.3rem;
+    }
+    
+    .countdown-number {
+        font-size: 2.5rem;
+    }
+    
+    .breathing-balloon {
+        width: 35vw;
+        height: 35vw;
+    }
+}
+
+/* Portrait-only enforcement (inherited from base.css) */
+
