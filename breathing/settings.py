@@ -33,8 +33,14 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--qo)m^sb5&*(8k+11oei&pc!y#
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 # ALLOWED_HOSTS - comma-separated list of allowed hosts
-ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '')
+# Support both ALLOWED_HOSTS and DJANGO_ALLOWED_HOSTS for flexibility
+ALLOWED_HOSTS_STR = os.getenv('DJANGO_ALLOWED_HOSTS') or os.getenv('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',') if host.strip()] if ALLOWED_HOSTS_STR else []
+
+# CSRF_TRUSTED_ORIGINS - comma-separated list of trusted origins for CSRF protection
+# Support both CSRF_TRUSTED_ORIGINS and DJANGO_CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS_STR = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS') or os.getenv('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS_STR.split(',') if origin.strip()] if CSRF_TRUSTED_ORIGINS_STR else []
 
 
 # Application definition
