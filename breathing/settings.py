@@ -92,24 +92,36 @@ WSGI_APPLICATION = 'breathing.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 # Use PostgreSQL in production (set via environment variables), SQLite for development
 
-# Detect production environment
-IS_PRODUCTION = os.getenv('ENVIRONMENT') == 'production' or os.getenv('DJANGO_SETTINGS_MODULE') == 'breathing.settings' or not DEBUG
-
 DATABASE_URL = os.getenv('DATABASE_URL', '')
 
 if DATABASE_URL:
-    # Check if DATABASE_URL is SQLite (not allowed in production)
-    if DATABASE_URL.startswith('sqlite://') and IS_PRODUCTION:
-        raise ValueError(
-            "SQLite is not supported in production. Please set DATABASE_URL to a PostgreSQL connection string. "
-            "Format: postgresql://user:password@host:port/dbname"
-        )
-    
-    # Production: Use PostgreSQL with DATABASE_URL (e.g., from DigitalOcean)
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
-    }
+    if DATABASE_URL.startswith('sqlite://'):
+        # SQLite database - parse the path
+        db_path = DATABASE_URL.replace('sqlite:///', '').replace('sqlite://', '')
+        if not db_path:
+            db_path = 'db.sqlite3'
+        
+        # Handle absolute paths (e.g., /app/db.sqlite3) or relative paths
+        if db_path.startswith('/'):
+            db_name = Path(db_path)
+        else:
+            db_name = BASE_DIR / db_path
+        
+        # Ensure the directory exists for the database file
+        db_name.parent.mkdir(parents=True, exist_ok=True)
+        
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': str(db_name),
+            }
+        }
+    else:
+        # PostgreSQL or other database via DATABASE_URL
+        import dj_database_url
+        DATABASES = {
+            'default': dj_database_url.parse(DATABASE_URL)
+        }
 elif os.getenv('DB_ENGINE') == 'postgresql':
     # Production: Use PostgreSQL with individual credentials
     DATABASES = {
@@ -122,14 +134,8 @@ elif os.getenv('DB_ENGINE') == 'postgresql':
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
-elif IS_PRODUCTION:
-    # Production environment but no database configured
-    raise ValueError(
-        "DATABASE_URL or PostgreSQL credentials must be set in production. "
-        "Please configure DATABASE_URL environment variable with a PostgreSQL connection string."
-    )
 else:
-    # Development: Use SQLite
+    # Development: Use SQLite (default)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
