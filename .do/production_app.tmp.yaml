@@ -1,0 +1,114 @@
+# Production App Spec Template for Digital Ocean App Platform
+# This file can be used as a template or directly configured in DO App Platform
+# 
+# IMPORTANT: Replace all placeholder values and secrets with your actual production values
+# - Database component reference: ${db.DATABASE_URL}
+# - Secrets should be configured in Digital Ocean App Platform dashboard
+# - Some values use ${VARIABLE} syntax which will be replaced by DO or GitHub Actions
+
+name: breathing-production
+region: fra
+
+domains:
+  - domain: breathing.trainbar.org
+    type: PRIMARY
+
+# Database component - CRITICAL: Choose ONE approach and stick with it!
+#
+# ⚠️ IMPORTANT: If you're using the GitHub workflow (deploy-production.yml):
+#   - Edit THIS FILE (.do/production_app.tmp.yaml) to make changes
+#   - Do NOT edit app spec in Digital Ocean dashboard (changes will be overridden)
+#   - Manual dashboard changes will be lost on next workflow run
+#
+# ⚠️ If you want to manage manually:
+#   - Disable the GitHub workflow first
+#   - Then edit app spec in Digital Ocean dashboard
+#   - Do NOT push to main or trigger workflow (will override manual changes)
+#
+# Your database (bulgarian-db-fra1) already exists - DO NOT uncomment the databases section below!
+# Uncommenting it would try to CREATE a new database, not link the existing one.
+#
+# OPTION 1: Use GitHub secret for DATABASE_URL (Current setup - Recommended)
+# The DATABASE_URL is set from GitHub secrets (see .github/workflows/deploy-production.yml)
+# Steps:
+# 1. Add DATABASE_URL to GitHub secrets with your full connection string
+# 2. Configure database firewall to allow App Platform connections:
+#    - Go to Digital Ocean → Databases → bulgarian-db-fra1
+#    - Settings → Trusted Sources → Add App Platform
+# 3. Commit and push - the workflow will deploy with DATABASE_URL from secrets
+#
+# OPTION 2: Link existing database via Dashboard (Alternative)
+# If you want to link the database component (for automatic networking):
+# 1. Go to your app in Digital Ocean dashboard
+# 2. Settings → Components → Add Component → Database
+# 3. Select your existing database: bulgarian-db-fra1
+# 4. Then update DATABASE_URL below to use: ${bulgarian-db-fra1.DATABASE_URL}
+# Note: This requires finding the "Add Component" option in the dashboard
+#
+# DO NOT uncomment the databases section below - it will create a NEW database!
+# databases:
+#   - name: bulgarian-db-fra1
+#     engine: PG
+#     production: true
+#     version: "17"
+
+services:
+  - name: web
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xs  # Production should be at least basic-xs (or larger: basic-s, basic-m, etc.)
+    http_port: 8080
+
+    github:
+      repo: sashaandreev/breathing
+      branch: main  # or your production branch
+      deploy_on_push: true
+
+    # CRITICAL: Build command must include collectstatic
+    # Note: Migrations run at runtime (in run_command) to avoid build-time database connection issues
+    # Note: When running tests (python manage.py test), the app automatically uses
+    # SQLite in-memory database instead of PostgreSQL, regardless of DATABASE_URL.
+    # This is handled by the is_testing check in bulgarian/settings.py
+    build_command: |
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput
+
+    # Production run command with OpenTelemetry instrumentation
+    # Note: Migrations run at runtime to avoid build-time database connection issues
+    # Note: setup_google_oauth is idempotent (safe to run multiple times)
+    # Note: collectstatic runs in build_command (static files stay local, served by WhiteNoise)
+    run_command: |
+      python manage.py migrate --noinput 2>&1 || echo "WARNING: Migrations failed. Check database connection."      
+
+
+    envs:
+      # ----- Django / app basics -----
+      - key: ENVIRONMENT
+        value: "production"
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        type: SECRET
+        value: "${generate.secret_key}"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "breathing.trainbar.org,trainbar.org,.trainbar.org"
+        # Note: .trainbar.org (dot prefix) matches any subdomain like languages.trainbar.org, math.trainbar.org
+        # Note: Preview apps use .ondigitalocean.app pattern in preview_app.tmp.yaml (Django's native pattern support)
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://breathing.trainbar.org,https://trainbar.org,https://.trainbar.org"
+        # Note: https://.trainbar.org (dot prefix) matches any subdomain for CSRF protection
+        # Note: https://*.ondigitalocean.app is handled automatically for all *.ondigitalocean.app domains
+      - key: DJANGO_SETTINGS_MODULE
+        value: "breathing.settings"
+      - key: DJANGO_LOG_LEVEL
+        value: "INFO"
+
+      # bindables expand on DO side
+      - key: GIT_SHA
+        value: "${_self.COMMIT_HASH}"
+
+      # Some secrets
+      # Note: DIGITALOCEAN_ACCESS_TOKEN is only used in workflow, not needed as app env var
+      - key: SPACES_REGION
+        value: "fra1"
+

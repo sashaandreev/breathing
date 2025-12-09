@@ -1,0 +1,63 @@
+###########################################################################
+####   DO NOT EDIT MANUALLY - This is an example/reference file      ####
+####   Configure production app in Digital Ocean App Platform        ####
+####   or use production_app.tmp.yaml as a template                  ####
+###########################################################################
+
+# This file shows an example production configuration
+# For actual deployment, either:
+# 1. Configure directly in Digital Ocean App Platform dashboard, OR
+# 2. Use production_app.tmp.yaml as a template and configure in DO dashboard
+
+name: bulgarian-production
+region: fra
+
+services:
+  - name: web
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    http_port: 8080
+
+    github:
+      repo: sashaandreev/bulgarian
+      branch: main
+      deploy_on_push: true
+
+    build_command: |
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate --noinput
+
+    run_command: |
+      opentelemetry-instrument \
+        --traces_exporter otlp \
+        --metrics_exporter otlp \
+        --logs_exporter otlp \
+        gunicorn bulgarian.wsgi:application \
+        --bind 0.0.0.0:8080 \
+        --workers 2 \
+        --threads 4 \
+        --timeout 60 \
+        --log-file - \
+        --access-logfile - \
+        --access-logformat '%(h)s - - [%(t)s] "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(L)ss svc=gunicorn'
+
+    envs:
+      - key: ENVIRONMENT
+        value: "production"
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        type: SECRET
+        value: "<CONFIGURE_IN_DO_DASHBOARD>"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "bulg.trainbar.org,*.ondigitalocean.app"
+      - key: DATABASE_URL
+        value: "${db.DATABASE_URL}"
+      - key: DJANGO_USE_S3
+        value: "True"
+      - key: AWS_STORAGE_BUCKET_NAME
+        value: "trainbar-assets-fra"
+      # ... configure all other environment variables in DO dashboard
+
