@@ -1,5 +1,6 @@
 asgiref==3.11.0
 Django==6.0
+dj-database-url==2.1.0
 dotenv==0.9.9
 gTTS>=2.5.0
 lxml==6.0.2
