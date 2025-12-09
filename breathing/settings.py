@@ -111,6 +111,9 @@ if DATABASE_URL:
         # Ensure the directory exists for the database file
         db_name.parent.mkdir(parents=True, exist_ok=True)
         
+        # Use absolute path to ensure consistency across different working directories
+        db_name = db_name.resolve()
+        
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
