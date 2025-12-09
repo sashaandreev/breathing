@@ -9,7 +9,8 @@ from .models import BreathingCategory, BreathingTechnique, BreathingSession
 
 def category_list_view(request):
     """Display all breathing categories."""
-    categories = BreathingCategory.objects.all().order_by('pk')
+    # Use select_related to optimize queries and cache the results
+    categories = BreathingCategory.objects.all().order_by('pk').prefetch_related('breathingtechnique_set')
     context = {
         'categories': categories,
     }
@@ -19,7 +20,8 @@ def category_list_view(request):
 def technique_list_view(request, category_id):
     """Display all techniques for a specific category."""
     category = get_object_or_404(BreathingCategory, pk=category_id)
-    techniques = BreathingTechnique.objects.filter(category=category).order_by('id')
+    # Use select_related to optimize foreign key lookups
+    techniques = BreathingTechnique.objects.filter(category=category).select_related('category').order_by('id')
     context = {
         'category': category,
         'techniques': techniques,
@@ -29,7 +31,7 @@ def technique_list_view(request, category_id):
 
 def technique_detail_view(request, technique_id):
     """Display technique detail/preparation screen."""
-    technique = get_object_or_404(BreathingTechnique, pk=technique_id)
+    technique = get_object_or_404(BreathingTechnique.objects.select_related('category'), pk=technique_id)
     # Map breath_origin to Russian description for display
     breath_origin_map = {
         'ABDOMEN': 'Брюшное дыхание',
@@ -49,7 +51,7 @@ def technique_detail_view(request, technique_id):
 
 def guide_view(request, technique_id):
     """Display active breathing guide screen."""
-    technique = get_object_or_404(BreathingTechnique, pk=technique_id)
+    technique = get_object_or_404(BreathingTechnique.objects.select_related('category'), pk=technique_id)
     # Map breath_origin to Russian description for display
     breath_origin_map = {
         'ABDOMEN': 'Брюшное дыхание',

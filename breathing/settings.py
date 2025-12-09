@@ -182,6 +182,21 @@ LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/'  # After login, redirect to home
 
 
+# Caching Configuration
+# Use database cache for SQLite, or simple in-memory cache
+# For better performance, consider Redis or Memcached in production
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+    }
+}
+
+# Cache timeout settings (in seconds)
+CACHE_MIDDLEWARE_SECONDS = 300  # 5 minutes for general pages
+CACHE_MIDDLEWARE_KEY_PREFIX = 'breathing'
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 

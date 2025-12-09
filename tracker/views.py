@@ -13,20 +13,21 @@ def get_activity_counts(user):
     """
     Helper function to calculate activity counts for a user.
     Returns a dictionary with 'resist', 'smoked', and 'sport' counts.
+    Optimized to use a single query with aggregation instead of 3 separate queries.
     """
+    from django.db.models import Count, Q
+    
+    # Single query with aggregation - much faster than 3 separate queries
+    counts = ActivityLog.objects.filter(user=user).aggregate(
+        resist=Count('id', filter=Q(activity_type='RESIST')),
+        smoked=Count('id', filter=Q(activity_type='SMOKED')),
+        sport=Count('id', filter=Q(activity_type='SPORT'))
+    )
+    
     return {
-        'resist': ActivityLog.objects.filter(
-            user=user,
-            activity_type='RESIST'
-        ).count(),
-        'smoked': ActivityLog.objects.filter(
-            user=user,
-            activity_type='SMOKED'
-        ).count(),
-        'sport': ActivityLog.objects.filter(
-            user=user,
-            activity_type='SPORT'
-        ).count(),
+        'resist': counts['resist'] or 0,
+        'smoked': counts['smoked'] or 0,
+        'sport': counts['sport'] or 0,
     }
 
 
