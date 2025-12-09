@@ -92,11 +92,23 @@ WSGI_APPLICATION = 'breathing.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 # Use PostgreSQL in production (set via environment variables), SQLite for development
 
-if os.getenv('DATABASE_URL'):
+# Detect production environment
+IS_PRODUCTION = os.getenv('ENVIRONMENT') == 'production' or os.getenv('DJANGO_SETTINGS_MODULE') == 'breathing.settings' or not DEBUG
+
+DATABASE_URL = os.getenv('DATABASE_URL', '')
+
+if DATABASE_URL:
+    # Check if DATABASE_URL is SQLite (not allowed in production)
+    if DATABASE_URL.startswith('sqlite://') and IS_PRODUCTION:
+        raise ValueError(
+            "SQLite is not supported in production. Please set DATABASE_URL to a PostgreSQL connection string. "
+            "Format: postgresql://user:password@host:port/dbname"
+        )
+    
     # Production: Use PostgreSQL with DATABASE_URL (e.g., from DigitalOcean)
     import dj_database_url
     DATABASES = {
-        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+        'default': dj_database_url.parse(DATABASE_URL)
     }
 elif os.getenv('DB_ENGINE') == 'postgresql':
     # Production: Use PostgreSQL with individual credentials
@@ -110,6 +122,12 @@ elif os.getenv('DB_ENGINE') == 'postgresql':
             'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
+elif IS_PRODUCTION:
+    # Production environment but no database configured
+    raise ValueError(
+        "DATABASE_URL or PostgreSQL credentials must be set in production. "
+        "Please configure DATABASE_URL environment variable with a PostgreSQL connection string."
+    )
 else:
     # Development: Use SQLite
     DATABASES = {
