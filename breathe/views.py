@@ -9,8 +9,8 @@ from .models import BreathingCategory, BreathingTechnique, BreathingSession
 
 def category_list_view(request):
     """Display all breathing categories."""
-    # Use select_related to optimize queries and cache the results
-    categories = BreathingCategory.objects.all().order_by('pk').prefetch_related('breathingtechnique_set')
+    # Use prefetch_related to optimize queries - related_name is 'techniques'
+    categories = BreathingCategory.objects.all().order_by('pk').prefetch_related('techniques')
     context = {
         'categories': categories,
     }
@@ -84,7 +84,7 @@ def session_manage(request):
         if not technique_id:
             return JsonResponse({'success': False, 'error': 'Technique ID required'}, status=400)
         
-        technique = get_object_or_404(BreathingTechnique, pk=technique_id)
+        technique = get_object_or_404(BreathingTechnique.objects.select_related('category'), pk=technique_id)
         
         if action == 'start':
             # Create new session
@@ -116,7 +116,7 @@ def session_manage(request):
                 return JsonResponse({'success': False, 'error': 'Session ID required'}, status=400)
             
             try:
-                session = BreathingSession.objects.get(pk=session_id, user=request.user)
+                session = BreathingSession.objects.select_related('technique', 'technique__category').get(pk=session_id, user=request.user)
                 session.cycles_completed = cycles_completed
                 session.save()
                 
@@ -136,7 +136,7 @@ def session_manage(request):
                 return JsonResponse({'success': False, 'error': 'Session ID required'}, status=400)
             
             try:
-                session = BreathingSession.objects.get(pk=session_id, user=request.user)
+                session = BreathingSession.objects.select_related('technique', 'technique__category').get(pk=session_id, user=request.user)
                 session.completed_at = timezone.now()
                 session.completed = True
                 session.cycles_completed = cycles_completed
@@ -159,7 +159,7 @@ def session_manage(request):
                 return JsonResponse({'success': False, 'error': 'Session ID required'}, status=400)
             
             try:
-                session = BreathingSession.objects.get(pk=session_id, user=request.user)
+                session = BreathingSession.objects.select_related('technique', 'technique__category').get(pk=session_id, user=request.user)
                 session.completed_at = timezone.now()
                 session.completed = False
                 session.cycles_completed = cycles_completed
