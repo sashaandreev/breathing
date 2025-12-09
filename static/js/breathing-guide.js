@@ -206,15 +206,10 @@ class BreathingGuideEngine {
         const now = Date.now();
         const elapsed = (now - this.startTime - this.totalPauseTime) / 1000; // seconds
         
-        // Check if session time has expired
+        // Check if session time has expired - complete immediately
         if (elapsed >= this.totalTimeSeconds) {
-            // Allow current cycle to finish
-            const cycleElapsed = elapsed % this.cycleDuration;
-            if (cycleElapsed >= this.cycleDuration - this.holdEnd) {
-                // Current cycle is finishing, complete session
-                this.complete();
-                return;
-            }
+            this.complete();
+            return;
         }
         
         // Calculate current phase and phase progress
@@ -310,13 +305,18 @@ class BreathingGuideEngine {
         if (!this.progressBar || !this.progressTime) return;
         
         const remaining = Math.max(0, this.totalTimeSeconds - elapsed);
-        const progress = Math.min(100, (remaining / this.totalTimeSeconds) * 100); // Reversed: start at 100%, go to 0%
+        const progress = Math.min(100, Math.max(0, (remaining / this.totalTimeSeconds) * 100)); // Reversed: start at 100%, go to 0%
         
         this.progressBar.style.width = `${progress}%`;
         
-        const minutes = Math.floor(remaining / 60);
-        const seconds = Math.floor(remaining % 60);
-        this.progressTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        // Show 0:00 when time expires, don't go negative
+        if (remaining <= 0) {
+            this.progressTime.textContent = '0:00';
+        } else {
+            const minutes = Math.floor(remaining / 60);
+            const seconds = Math.floor(remaining % 60);
+            this.progressTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
     }
     
     updatePhaseIndicator(phase, phaseElapsed, phaseDuration) {
